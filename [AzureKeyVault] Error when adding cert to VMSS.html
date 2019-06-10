@@ -1,0 +1,16 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[AzureKeyVault] Error when adding cert to VMSS</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    6/17/2017 11:57:24 PM</time>
+<hr>
+<div id='content'><p>Recently I had this error after adding newly created KV secret having cert to VMSS using PS. First I did not get sense out of this, but on close look it turns to be a simpler one. </p><p><strong><u>Error:- </u></strong></p><p>Key Vault <a href="https://xxxx.vault.azure.net/secrets/texxxx/defxxxxbc">https://xxxx.vault.azure.net/secrets/certswaptest0001/defxxxxbc</a> <strong>either has not been enabled for deployment or the vault id provided,</strong> /subscriptions/38e1xxx-xx-xx-a931-xxx/resourceGroups/certswaptestKeyVaultGroup/providers/Microsoft.KeyVault/vaults/certswaptestKeyVault, <strong>does </strong><strong>not match the Key Vault's true resource id.</strong></p><p><b><u>Resolution :-</u></b></p><p>The key vault <em>must be enabled for deployment</em> to allow the compute resource provider to get certificates from it and install it on virtual machine instances:<p><a href="https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cluster-creation-via-arm">https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cluster-creation-via-arm</a>&nbsp; (Search for <strong><font>EnabledForDeployment</font></strong>)<p>you can try this in PS or portal as below. <p>New-AzureRmKeyVault -VaultName 'mywestusvault' -ResourceGroupName 'westus-mykeyvault' -Location 'West US' –<strong>EnabledForDeployment</strong><p><a href="media/2017/06/clip_image0011.jpg"><img width="710" height="510" title="clip_image001" alt="clip_image001" src="media/2017/06/clip_image001_thumb1.jpg" border="0"></a></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

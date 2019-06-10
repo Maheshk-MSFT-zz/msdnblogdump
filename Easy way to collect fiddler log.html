@@ -1,0 +1,42 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Easy way to collect fiddler log</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    5/3/2016 1:44:56 AM</time>
+<hr>
+<div id='content'><p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">This comes handy when you wanted to capture fiddler logs from a user machine where the issue occur and do not have fiddler installed. You need to install the fiddler if your motive is to just collect the logs and move on, then solution#2 is the recommended approach.</p>
+
+<pre><span style="text-decoration: underline"><strong>Solution #1:</strong></span></pre>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">Please download fiddler from the web: <a style="color: #333300" href="http://www.telerik.com/download/fiddler">http://www.telerik.com/download/fiddler</a></p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt"> 1. Open Fiddler, In Tools-&gt;Fiddler Options-&gt;HTTPS, check “Decrypt HTTPS traffic”.</p>
+<p style="margin: 0in;margin-left: .375in;font-family: Calibri;font-size: 11.0pt">Click “Yes” on the prompt for trust Fiddler Root Certificate.</p>
+<p style="margin: 0in;margin-left: .375in;font-family: Calibri;font-size: 11.0pt">Click “Yes” to install the certificate.</p>
+<p style="margin: 0in;margin-left: .375in;font-family: Calibri;font-size: 11.0pt">Click “Yes” to confirm.</p>
+<p style="margin: 0in;margin-left: .375in;font-family: Calibri;font-size: 11.0pt">Click “OK” and “OK” to back.</p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">2. Reproduce the issue, log down the time when the issue happen again. We may capture 2 or 3 times of the issue.</p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">3. Stop Fiddler Trace: File-&gt;Capture Traffic F12, Save trace: File-&gt;Save&gt;All Sessions. Save the trace out as .saz file</p>
+
+<pre><span style="text-decoration: underline"><strong>Solution #2:</strong></span></pre>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">1. Download the FiddlerCap - <a title="http://www.telerik.com/fiddler/fiddlercap" href="http://www.telerik.com/fiddler/fiddlercap" target="_blank">http://www.telerik.com/fiddler/fiddlercap</a></p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">2. Select the options as you wish</p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">3. Start Capturing :)</p>
+
+
+[caption id="attachment_155" align="alignnone" width="701"]<a href="media/2016/05/fcap.png" target="_blank"><img class="wp-image-155" src="media/2016/05/fcap.png" alt="fiddlercap" width="701" height="432" /></a> fiddlercap[/caption]
+
+&nbsp;
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt"><em>Advantages of fiddler cap:- </em></p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">1) &lt; 1 MB size  (~330 KB)</p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">2) ability to add comments and take snapshot</p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">3) just do the stuff right</p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt">4) ability to clear WinINET cookies and cache (Tools &gt; Clear..)</p>
+<p style="margin: 0in;font-family: Calibri;font-size: 11.0pt"></p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

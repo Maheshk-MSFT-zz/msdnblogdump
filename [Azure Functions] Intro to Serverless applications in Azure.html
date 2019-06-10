@@ -1,0 +1,152 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[Azure Functions] Intro to Serverless applications in Azure</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    3/19/2017 3:59:00 AM</time>
+<hr>
+<div id='content'><strong>“Serverless computing(SC)”</strong> is a most cited buzzword in cloud computing after AI/ML, microservices, IoT, AR/VR/MR etc. Almost all the tech conferences has at least one session around this topic in their slot. Serverless computing is there for sometime now but recently getting adapted and used in conjunction with various cloud born solutions because of its easiness.
+
+<span style="text-decoration: underline"><em>What is actually then SC?</em></span> It is our next generation of "true" PaaS computing service or also called our next layer of abstraction in Cloud Compute. In Cloud computing term, this is called as function as a service(<em><strong>FaaS</strong></em>) aka event driven computing where our code invoked on demand. Studies predicts that, in future(2022) we will be buying bunch of <em>functions</em> to meet most of the current simple requirements. In the serverless model, the cloud provider fully manages the underlying infra so as a developer we focus only on our requirement or integration points. The idea is to break our application into silos functions like say add, update, validate, send an email or delete some backend records based on the events submitted over REST API endpoints(on demand) etc.
+
+<span style="text-decoration: underline"><em>Background?</em> </span>AWS was the first one to introduce such model of computing called AWS Lamda in 2014. Within two years, Microsoft(Azure Functions), IBM(OpenWhisk), Googles (Google cloud functions) and even mid tier providers also has their offerings for this. At the current rate, we wouldn't be surprised to see FaaS as main tool used for get it done(GTD) "many" disjointed computing from our mainstream application. Let say, it could be a simple validation to complex log analysis or job submission invoked from any device or platform or language. Lot of cool things like tooling, continuous delivery, source control integration support etc happening in this space brings this confident.
+
+<span style="text-decoration: underline"><em>Is it a microservices?</em></span> It may look similar to microservices but actually not. In microservices, we can group multiple such services to form a single service but in case of serverless computing, our code is executed in isolation(silos), autonomous and in granular level.
+
+<span style="text-decoration: underline"><em>Scenarios?</em></span>  It can used for log analysis, IoT backend, cognitive bots, mobile back ends and REST API like querying weather forecast on a button click event etc. Most used one is user uploading an image, process (resize,crop etc) and then to required size for the reader device type.
+
+<span style="text-decoration: underline"><em>benefits?</em></span> The main advantages it brings is "cost", "scalability", "development cycle", "tooling setup" and freedom from infra maintenance. User is expected to pay only for the <em>milliseconds</em> compute used for this function runs and not for the whole instance.
+
+<em><span style="text-decoration: underline">What Azure offers in this space</span> (Serverless architectures)?</em> Azure Functions allows developers who already working with the Azure platform to integrate functions easily into their existing Azure-based workflow. It is a <em>serverless</em> compute executes little bit of code on demand. It provides more or less similar features like AWS Lambda and Google Functions however this stackoverflow(<a href="http://stackoverflow.com/questions/40326085/compare-aws-lambda-azure-functions-and-google-cloud-function">page</a>) summarize all the differences in detail. Best part about this service is, it rightly expose required “Functions as a Service” over HTTP end endpoints which can be triggered through timer based events or external service events like blob uploaded to storage or data insertion in backend etc. It can be scaled based on customer selection. By the way, Azure function is built on top of App Service and WebJobs SDK.
+
+<em><span style="text-decoration: underline">Any other serverless service from Azure?</span></em> Azure functions and Azure Logic apps offers serverless compute. The key difference is, the <a href="https://channel9.msdn.com/Blogs/Microsoft-Integration/Build-and-Deploy-Serverless-Part-1">LogicApps </a>doesn't provide a way to write custom code.
+
+Let us see a sample Azure Functions usage in real time usecase.
+
+<a href="media/2017/03/image430.png"><img title="image" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2017/03/image_thumb409.png" width="486" height="261" class="" /></a> <a href="media/2017/03/image431.png"><img title="image" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2017/03/image_thumb410.png" width="489" height="279" class="" /></a>
+
+This example is borrowed from my Pluralsight training video to demonstrate the power of Azure functions. In this demo, we expect the user to upload the image to Azure storage which will be submitted to Cognitive service after Azure functions invoked after “BlobTrigger” event
+
+<strong>Step1</strong>:- Create a Cognitive Service Emotion API from the Azure portal and keep the key ready. <a href="https://www.microsoft.com/cognitive-services/en-us/Emotion-api/documentation" title="https://www.microsoft.com/cognitive-services/en-us/Emotion-api/documentation">https://www.microsoft.com/cognitive-services/en-us/Emotion-api/documentation</a>
+
+<a href="media/2017/03/image432.png"><img title="image" style="padding-top: 0px;padding-left: 0px;margin: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2017/03/image_thumb411.png" width="909" height="467" /></a>
+
+<strong>Step</strong> 2) Create a new Storage Account having container named “images”, this is where we are going to dump the images as input for Cognitive service to fetch from.
+
+<a href="media/2017/03/image433.png"><img title="image" style="padding-top: 0px;padding-left: 0px;margin: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2017/03/image_thumb412.png" width="909" height="319" /></a>
+
+<strong>Step3</strong>:- Go ahead and create a function say “imageprocessingdemo” by selecting a “BlobTrigger-CSharp” template and have the below code.
+
+<a href="media/2017/03/image434.png"><img title="image" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2017/03/image_thumb413.png" width="921" height="689" /></a>
+
+<strong>Step4</strong>:- Input the image path, storage account details from where the images will be pulled after the trigger event.
+
+<a href="media/2017/03/image651.png"><img title="image[65]" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image[65]" src="media/2017/03/image65_thumb.png" width="917" height="449" /></a>
+
+&nbsp;
+
+<strong>Step5</strong>:- Pls note, Azure Functions gets compiled on Save button event. So, upon “run” event we can the see the uploaded image score.
+
+2017-03-18T21:39:32.590 GetUri:https://functionimages.blob.core.windows.net/images/crying-baby[1].jpg?sv=2015-12-11&amp;sr=b&amp;sig=ZBktU%2F4T60SfgeTgTpQXF%2FF%2xxxxxNP93YN1U%3D&amp;st=2017-03-18T21:09:32Z&amp;se=2017-03-18T22:09:32Z&amp;sp=r 2017-03-18T21:39:38.197 <span style="background-color: #ffff00">results:[{"faceRectangle":{"height":967,"left":1560,"top":653,"width":967},"scores":{"anger":1.18772381E-09,"contempt":1.18056471E-08,"disgust":3.18779553E-06,"fear":7.162184E-08,"happiness":5.468896E-10,"neutral":1.40484147E-07,"sadness":0.9999966,"surprise":1.34302474E-11}}]</span> 2017-03-18T21:39:38.197
+
+Function completed (Success, Id=ce4f2b14-9cee-4148-a111-d38f5d2aaa16)
+
+<span style="color: #c0504d"><u><strong>Code:-</strong></u></span>
+
+<span style="color: #c0504d;font-family: 'Courier New'"><strong>#r "Newtonsoft.Json"
+#r "Microsoft.WindowsAzure.Storage"</strong></span>
+
+<span style="color: #c0504d;font-family: 'Courier New'"><strong>using Microsoft.WindowsAzure.Storage.Blob;
+using Newtonsoft.Json;
+using System.Text;</strong></span>
+
+<span style="color: #c0504d;font-family: 'Courier New'"><strong>public static async Task Run(CloudBlockBlob myBlob, string name, TraceWriter log)
+{
+</strong>    log.Info($"C# Blob trigger function Processed blob\n Name:{name}");</span>
+
+var uri=<span style="background-color: #ffff00">GetUri(myBlob);</span>
+log.Info($"GetUri:{uri}");
+
+<span style="color: #c0504d;font-family: 'Courier New'">    var analysis= await <span style="background-color: #ffff00">GetAnalysis(uri);</span></span>
+
+<span style="color: #c0504d;font-family: 'Courier New'">    log.Info($"results:{analysis}");
+<strong>}</strong></span>
+
+<span style="color: #c0504d;font-family: 'Courier New'"><strong>public static Uri <span style="background-color: #ffff00">GetUri(CloudBlockBlob blob)</span>
+{
+</strong>   var sasPolicy =new SharedAccessBlobPolicy
+{
+Permissions = SharedAccessBlobPermissions.Read,
+SharedAccessStartTime = DateTime.Now.AddMinutes(-30),
+SharedAccessExpiryTime = DateTime.Now.AddMinutes(30)
+};
+var sastoken= blob.GetSharedAccessSignature(sasPolicy);
+var uri = new Uri($"{blob.Uri.ToString()}{sastoken}");
+return uri;
+<strong>}</strong></span>
+
+<span style="color: #c0504d;font-family: 'Courier New'"><strong>public static async Task&lt;string&gt; <span style="background-color: #ffff00">GetAnalysis(Uri uri)
+</span>{
+</strong>    var client = new HttpClient();
+var data = JsonConvert.SerializeObject(new { url = uri.ToString() } );
+var request = new HttpRequestMessage
+{
+RequestUri=new Uri("</span><a href="https://api.projectoxford.ai/emotion/v1.0/recognize&quot;)"><span style="color: #c0504d;font-family: 'Courier New'">https://api.projectoxford.ai/emotion/v1.0/recognize")</span></a><span style="color: #c0504d;font-family: 'Courier New'">,
+Method= HttpMethod.Post
+};</span>
+
+<span style="color: #c0504d;font-family: 'Courier New'">    request.Headers.Add("Ocp-Apim-Subscription-Key","e538a0xxfexxxxc6f41965894");
+request.Content= new StringContent(data,Encoding.UTF8, "application/json");</span>
+
+<span style="color: #c0504d;font-family: 'Courier New'">    var response = await client.SendAsync(request);
+var result = await response.Content.ReadAsStringAsync();
+return result;
+<strong>}</strong></span>
+
+<strong><span style="color: #c0504d;font-family: 'Courier New'"><u>Bindings:-</u></span></strong>
+
+<span style="color: #c0504d;font-family: 'Courier New'">{
+"bindings": [
+{
+"name": "myBlob",
+"type": "blobTrigger",
+"direction": "in",
+"path": </span><span style="font-family: 'Courier New'"><span style="color: #c0504d"><span style="background-color: #ffff00">"images/{name}",
+</span>      "connection": "functionimages_STORAGE"
+}
+],
+"disabled": false
+}</span></span>
+
+Few other use cases where Azure Functions can be used,
+<ul>
+ 	<li>Find and clean invalid data from the backend storage table for every 15 mins (Timer based)</li>
+ 	<li>Transform the user uploaded files to storage – say convert to different format or compress or resize or insert into data rows (Event Based)</li>
+ 	<li>Read the sales data excel file from OneDrive, analyze and create new sheets with charts (Saas Event processing)</li>
+ 	<li>Loaded web page calling web hook &gt; Create ad based on user profile (Applications - Serverless web Application architectures)</li>
+ 	<li>Photo taken in mobile, webbook called to store it in Azure storage which is then scaled to different resolution using Azure functions (Async background processing as mobile backend)</li>
+ 	<li>Massage the streaming data and transform to structured data for DB insertion</li>
+ 	<li>Message sent to chatbot and responding to the questions (real-time bot messaging)</li>
+ 	<li>ETL loads (Extract, Transform, &amp; Load)</li>
+ 	<li>Sending email reminder after some alert/event say insurance renewal</li>
+ 	<li>Automated billing reminder</li>
+</ul>
+Reference:-
+
+<a href="https://functions.azure.com"><span style="font-size: small">https://functions.azure.com</span></a><span style="font-size: small"> &amp;  </span><a href="https://tryappservice.azure.com"><span style="font-size: small">https://tryappservice.azure.com</span></a><span style="font-size: small"> </span>
+
+<a href="https://crontab.guru/" title="https://crontab.guru/"><span style="font-size: small">https://crontab.guru/</span></a><span style="font-size: small">  (useful to generate “Schedule” for timerbasedtriggers, don’t forget to add secondsl)</span>
+
+<a href="https://www.troyhunt.com/azure-functions-in-practice/" title="https://www.troyhunt.com/azure-functions-in-practice/"><span style="font-size: small">https://www.troyhunt.com/azure-functions-in-practice/</span></a><span style="font-size: small"> </span>
+
+<a href="http://mikhail.io/2017/03/azure-functions-as-facade-for-azure-monitoring/" title="http://mikhail.io/2017/03/azure-functions-as-facade-for-azure-monitoring/"><span style="font-size: small">http://mikhail.io/2017/03/azure-functions-as-facade-for-azure-monitoring/</span></a>
+
+Let me know if you have used Azure Functions for your interesting scenario.</div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

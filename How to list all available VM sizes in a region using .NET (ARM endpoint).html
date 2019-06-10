@@ -1,0 +1,87 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>How to list all available VM sizes in a region using .NET (ARM endpoint)</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    10/19/2016 10:46:00 PM</time>
+<hr>
+<div id='content'>Today, I had a query from a developer asking how to silent authenticate and fetch the list of available <strong>VM’s sizes</strong> from a particular region using .NET code. They wanted to fetch this detail from their worker role more precisely. They wanted to call the URI as in this article silent authenticated <a href="https://msdn.microsoft.com/en-us/library/azure/mt269440.aspx" title="https://msdn.microsoft.com/en-us/library/azure/mt269440.aspx">https://msdn.microsoft.com/en-us/library/azure/mt269440.aspx</a>
+<table cellspacing="0" cellpadding="2" width="960" border="0">
+<tbody>
+<tr>
+<td valign="top" width="200"><strong>Method </strong></td>
+<td valign="top" width="758"><strong>Request URI</strong></td>
+</tr>
+<tr>
+<td valign="top" width="200">GET</td>
+<td valign="top" width="758"><a href="https://management.azure.com/subscriptions/{subscription-id}/providers/Microsoft.Compute/locations/{location}/vmSizes?api-version={api-version">https://management.azure.com/subscriptions/{subscription-id}/providers/Microsoft.Compute/locations/{location}/vmSizes?api-version={api-version</a>}</td>
+</tr>
+</tbody>
+</table>
+On first sight, I thought this as an RDFE endpoint(older portal/SMAPI), but on closer look this turned to be an ARM end point.
+
+<strong>How to identify the url is an RDFE/ARM endpoint? </strong>
+<ul>
+ 	<li><strong>RDFE</strong> end point will be some like this - string uri = @<a href="https://management.core.windows.net/38e1b8c4-c5bc-4dd5-a7e0-e909b45f4fad/services/hostedservices/cloudpanther">https://<span style="color: #0000ff"><em>management<strong>.core.windows.net</strong></em></span>/xxx-c5bc-4xxxxxd/services/hostedservices/cloudpanther</a>;</li>
+ 	<li><strong>ARM</strong> end point - <a href="https://management.azure.com/subscriptions/38e1b8c4-c5bc-4dd5-a7e0-e909b45f4fad/providers/Microsoft.ClassicStorage/osImages?api-version=2016-04-01">https://<span style="color: #0000ff"><em>management<strong>.azure.com</strong></em></span>/subscriptions/xxxx-cxx-xxxxx/providers/Microsoft.ClassicStorage/osImages?api-version=2016-04-01</a>;</li>
+</ul>
+Please note, for RDFE end point we may have to either use certificate based or native client way of authentication.
+
+Since this is an ARM endpoint, we need to follow the service principal way to get the bearer token which is needed for the URI GET call’s.
+
+<span style="background-color: #ffff00"><strong>Step1:-</strong></span>
+
+Perform the following action one by one carefully as in this URL -  <a href="https://azure.microsoft.com/en-us/documentation/articles/resource-group-create-service-principal-portal/">https://azure.microsoft.com/en-us/documentation/articles/resource-group-create-service-principal-portal/</a>
+<ol>
+ 	<li>
+<div align="justify">Create an Active Directory application</div></li>
+ 	<li>
+<div align="justify">Get client id and authentication key</div></li>
+ 	<li>
+<div align="justify">Get tenant id</div></li>
+ 	<li>
+<div align="justify">Set delegated permissions</div></li>
+ 	<li>
+<div align="justify">Assign application to role</div></li>
+</ol>
+<p align="justify"><span style="background-color: #ffff00"><strong>Step2:-</strong></span></p>
+<p align="justify"><span style="color: #0000ff;font-family: Consolas;font-size: small">using System;
+using System.IO;
+using System.Net;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;</span></p>
+<span style="color: #0000ff;font-family: Consolas;font-size: small">namespace ConsoleApplication1
+{
+class Program
+{
+static void Main(string[] args)
+{</span>
+
+<span style="color: #0000ff;font-family: Consolas;font-size: small">            var context = new AuthenticationContext("</span><a href="https://login.microsoftonline.com/+"><span style="color: #0000ff;font-family: Consolas;font-size: small">https://login.microsoftonline.com/+</span></a><span style="color: #0000ff;font-family: Consolas;font-size: small"> "your_tenantid");
+ClientCredential credential = new ClientCredential("your_client_ID", "your_client_secret");
+AuthenticationResult result = context.AcquireToken("</span><a href="https://management.azure.com/&quot;"><span style="color: #0000ff;font-family: Consolas;font-size: small">https://management.azure.com/"</span></a><span style="color: #0000ff;font-family: Consolas;font-size: small">, credential);
+var token = result.CreateAuthorizationHeader().Substring("Bearer ".Length);</span>
+
+<span style="color: #0000ff;font-family: Consolas;font-size: small">            string uri = @"</span><a href="https://management.azure.com/subscriptions/"><span style="color: #0000ff;font-family: Consolas;font-size: small">https://management.azure.com/subscriptions/</span></a><span style="color: #0000ff;font-family: Consolas;font-size: small">&lt;your_subscription_Id&gt;/providers/Microsoft.Compute/locations/Southeast Asia/vmSizes?api-version=2015-05-01-preview";
+HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+request.Headers.Add("Authorization:Bearer " + token);
+var response = request.GetResponse().GetResponseStream();
+var output = new StreamReader(response).ReadToEnd();</span>
+
+<span style="color: #0000ff;font-family: Consolas;font-size: small">            Console.WriteLine(output);
+}
+}
+}</span>
+
+<em>P.s:- I have used Adal 2.28.2.795 to avoid async complexities. </em>
+
+<strong>on executing,</strong>
+
+<a href="media/2016/10/image747.png"><img title="image" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2016/10/image_thumb649.png" width="837" height="490" /></a></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

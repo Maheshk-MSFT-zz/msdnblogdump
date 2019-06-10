@@ -1,0 +1,16 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[Linux] How to login Azure Linux VM&rsquo;s using SSH key pair</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    1/30/2018 9:25:00 PM</time>
+<hr>
+<div id='content'><p><font size="2">This post is for Linux newbies trying to figure out SSH way login to Azure Linux VM. I am following the steps explained <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/linux/mac-create-ssh-keys">here</a>. Had seen many times our windows users struggle to get this right at first shot. Hope the below screenshots are clear to follow and achieve easy logon. Ps note, there are many ways to get this done but I felt this as the quick way to get it right without jumping between tools/sites. </font></p><p><font size="2"><strong>Step 1</strong>: I am using WSL but you can try Git Bash or bitvise or Putty or Tux vm or any other SSH client of your choice. </font></p><p><a href="media/2018/01/image384.png"><img width="680" height="692" title="image" alt="image" src="media/2018/01/image_thumb366.png" border="0"></a></p><p><font size="2">Pls note down the Key passphrase safely. This is required when we SSH to Linux VM from $ terminal. </font><p><font size="2"><strong>Step 2: </strong>You would see the public and private keys generated at the path <strong>~/.ssh</strong>. Cat out the <strong>id_rsa.pub</strong> file to grab the public key which is required when creating Azure Linux VM. </font><p><a href="media/2018/01/image385.png"><img width="687" height="178" title="image" alt="image" src="media/2018/01/image_thumb367.png" border="0"></a><p><font size="2"><strong>Step 3: </strong>Paste the above Public key at the time of VM creation in portal or CLI</font><p><a href="media/2018/01/image386.png"><img width="682" height="537" title="image" alt="image" src="media/2018/01/image_thumb368.png" border="0"></a><p><font size="2"><strong>Step 4: </strong>Once the VM is created, copy the SSH command to logon</font></p><p><a href="media/2018/01/image387.png"><img width="855" height="348" title="image" alt="image" src="media/2018/01/image_thumb369.png" border="0"></a></p><p><font size="2"><strong>Step 5: </strong>Go back to the your favorite SSH client and run the above copied command. Pls note, it will prompt for the passphrase which you have to enter now. On success, you would see your remote machine terminal. </font><p><a href="media/2018/01/image388.png"><img width="855" height="455" title="image" alt="image" src="media/2018/01/image_thumb370.png" border="0"></a><p><font size="2">Let me know if you see this helps you in some way. </font><p><font size="2">Happy learning !</font></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

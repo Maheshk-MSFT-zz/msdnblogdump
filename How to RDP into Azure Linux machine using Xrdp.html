@@ -1,0 +1,89 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>How to RDP into Azure Linux machine using Xrdp</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    6/30/2016 3:38:00 AM</time>
+<hr>
+<div id='content'><span style="font-size: medium">I ran into this issue after creating Azure Linux VM and attempting to configure RDP for the first time. At Linux side, I have installed </span><a target="_blank" href="http://www.xrdp.org/"><span style="font-size: medium">Xrdp</span></a><span style="font-size: medium"> and configured for RDP access. But when I try to RDP from my windows machine then it failed. I spent few hours troubleshooting this issue without clue but later it turned out to be a “<strong>port</strong>” issue. Yes, by default Azure VM’s will expose or allow very limited port say 80,443 for Windows and in Linux Port 22 for SSH connection. So in order to enable RDP for Linux/Win machines, then you may have to add this port <strong>3389</strong> under “<strong>incoming security rules</strong>” as below. </span>
+
+<a href="media/2016/06/image1070.png"><span style="font-size: medium"><img title="image" src="media/2016/06/image_thumb856.png" alt="image" width="922" height="436" /></span></a>
+
+<span style="font-size: medium">I followed this </span><a target="_blank" href="http://www.tweaking4all.com/software/linux-software/use-xrdp-remote-access-ubuntu-14-04/"><span style="font-size: medium">blog post</span></a><span style="font-size: medium"> for xrdp setup up but nothing specific about Azure port as such. So thought of summarizing my learning here in steps to follow quickly for achieving RDP access to <strong>Azure Linux VM’s.</strong> </span>
+
+<span style="font-size: medium">1) Login to new portal (portal.azure.com), Click “+ New” for adding resource, then select Virtual machine. You will find Ubuntu server OS list. Let say pick “Ubuntu Server 14.04.4 LTS”. Make sure to note down the Username, Password and Public IP(PIP) for later reference. </span>
+
+<span style="font-size: medium">2) Once VM has been created, use </span><a target="_blank" href="www.putty.org"><span style="font-size: medium">Putty.exe</span></a><span style="font-size: medium"> to connect to the VM over SSH(Port 22) which is enabled by default. Enter the PIP and hit the connect button. You will get a console asking to enter username and password. Once provided, you will land in Linux terminal where we are going to execute the next set of commands in order. </span>
+
+<a href="media/2016/06/image1073.png"><span style="font-size: medium"><img title="image" src="media/2016/06/image_thumb859.png" alt="image" width="404" height="401" /></span></a>
+
+<span style="font-size: medium">3) Command to Install Desktop and xRDP at Linux VM side.</span>
+
+<span style="color: #c0504d;font-family: Consolas;font-size: medium">$ sudo apt-get update</span>
+
+<span style="color: #c0504d;font-family: Consolas;font-size: medium"><span><em>$ sudo apt-get install ubuntu-desktop</em></span>
+$ <span style="text-decoration: underline"><em>sudo apt-get install xfce4</em></span>
+$ sudo apt-get install xrdp
+$ echo xfce4-session &gt;~/.xsession
+$ sudo nano /etc/xrdp/startwm.sh  &lt;attention to the last line, it should be exactly like this&gt;
+#!/bin/sh
+if [ -r /etc/default/locale ]; then
+. /etc/default/locale
+export LANG LANGUAGE
+fi
+startxfce4
+$ sudo service xrdp restart</span>
+
+<span style="font-size: medium">4) Now go back to Azure portal and <strong>Add Port 3389</strong> under Inbound security rule (as in the above screenshot). P.s:- 3389 is well known port used by Azure for RDP. </span>
+
+<span style="font-size: medium">5) Now from Windows machine, Launch “mstsc” to input VIP and username &amp; password to Xrdp. </span>
+
+<a href="media/2016/06/ss.png"><img class="alignleft wp-image-996" src="media/2016/06/ss-300x214.png" alt="ss" width="364" height="260" /></a>
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+<span style="font-size: medium">P.s:- Clipboard copy not supported here. </span>
+
+<span style="font-size: medium">I missed the step 4 and wasted quite a lot of time figuring out. </span>
+
+<span style="font-size: medium;line-height: 1.5">Hope this will save someone's time :) .</span>
+
+<em><span style="color: #993300">&lt;update:7/21&gt;</span>
+<span style="color: #993300">               a. Finding the inbound rules is little tricky..</span>
+<span style="color: #993300">                       VM &gt; settings &gt; network interfaces &gt;settings &gt; NSG &gt; select the NSG &gt; settings &gt; inbound rules</span>
+<span style="color: #993300">               b. lately noticed our official article on this <a href="https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-linux-classic-remote-desktop/">https://azure.microsoft.com/en-in/documentation/articles/virtual-machines-linux-classic-remote-desktop/</a></span></em>
+
+<em><span style="color: #993300">&lt;</span></em><em><span style="color: #993300">/update:7/21&gt;</span></em>
+
+Update:8/1 - tips
+
+1) exit -&gt;logout, 2) sudo -  -&gt; (to get into root) 3) sudo passwd root
+
+4) download any .deb (<code>tar xzvf file.tar.gz) extract, check for bin &gt; say check for "sh" file -pycharm.sh, right click &gt; execute</code>
+
+&nbsp;
+
+<strong>&lt;<span style="color: #ff0000">Unsupported</span>: 9/28/2016&gt;</strong>
+
+<em><span style="color: #ff0000">Unsupported: How to install xRDP for GUI remote access on Linux</span></em>
+<em> <a href="https://blogs.msdn.microsoft.com/linuxonazure/2016/09/26/unsupported-how-to-install-xrdp-for-gui-remote-access-on-linux/">https://blogs.msdn.microsoft.com/linuxonazure/2016/09/26/unsupported-how-to-install-xrdp-for-gui-remote-access-on-linux/</a></em>
+
+<strong>&lt;/<span style="color: #ff0000">Unsupported</span>&gt;</strong></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

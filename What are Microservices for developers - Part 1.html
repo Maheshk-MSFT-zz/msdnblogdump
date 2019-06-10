@@ -1,0 +1,75 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>What are Microservices for developers - Part 1</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    4/1/2016 2:51:38 AM</time>
+<hr>
+<div id='content'>Today's post is after reading the below book on Microservices and various Service fabric article readings and research. I am planning to break it down into series of blog post explaining Service Fabric and things to learn for developers or architects in coming days hopefully, wish me good luck ;).. Comments welcome.
+
+[embed]https://twitter.com/MahesKBlr/status/685879857503309824[/embed]
+
+What is this Microservices and why there is huge fuzz in recent times:-
+
+Microservices are nothing but <em><strong>fine grained SOA offerings.</strong></em> We can say more politely <em><strong>"it does one thing but very well"</strong></em> means without affecting others or waiting something to trigger. It gives lot of freedom for developers more importantly to decide how to use, design, language to choose, platform to run, deploy, scale etc. It decouples from the main deliverable but revolves in satellite mode support with thick coupling.
+
+Let us see one by one:-
+
+1) It help us to develop, deliver as a <strong>smaller</strong> component services importantly in an <strong>agile way.</strong> Each of these services can be owned by a smaller team can be fed with 2 Pizza's team which they call in Amazon (read about <a title="2 pizza member team" href="http://blog.idonethis.com/two-pizza-team/" target="_blank">2PT's</a>) which I picked from <a title="https://twitter.com/MahesKBlr/status/706773985875210240/photo/1?ref_src=twsrc%5Etfw" href="https://twitter.com/MahesKBlr/status/706773985875210240/photo/1?ref_src=twsrc%5Etfw" target="_blank">this </a>fantastic book.
+
+2) It gives us the <strong>freedom</strong> to develop and deploy services independently without waiting for the complete release say quarterly release or half yearly release cycle as in monolithic world. The consumer can start seeing the enhancements or features rolled out now and then and enjoy greatly.
+
+3) These Microservices though deployed separately, but it has to be orchestrated together in one way or another to work closely for a bigger applications. It is designed to run as a <strong>unique process or service in silos</strong> bundled including separate DB to maintain its state values. It <strong>communicate</strong> with each other services over <strong>Web API/Broker messages way of signalling and syncing.</strong> By going this way, we make the team into small units owning the end-to end service responsibility focusing and pushing without waiting for a big release day.
+
+4) DevOps role kind of guys comes in here to develop, configure, release, maintain and also monitor <strong>these services exposed as an API endpoint or stateless REST API's or HTTP/XML/TCP/JSON and of course even binary format too. </strong>Typical example would be, heavy trafficked eCommerce site like Amazon, the recommendation shown at the bottom of the page would come from one such microservice, payment gateway code logic on another microservice, or themes or catalogue.. so who knows there could be 25+ such microservices supporting the complete portal. These kind of service separation allows the developer guys to evolve quickly and also fix their bugs/changes in real time by updating one after the other. Live example is, amazon.com relies on more than 150+ API's to render its any of their page.
+
+5) These services can be written in <strong>any programming</strong> language or using any framework hosted in <strong>any platform</strong> too. It gives us the choice to decide and roll out quickly with our known languages.
+
+6) It gives us the <strong>flexibility to test</strong> out these individual services individually for scaling scenarios to sustain black friday sale days kind of sudden burst.
+
+7) As I said earlier, these services do one thing so it has to do well. So having this in mind, developers design them to live and serve for longer time by having newer version side by side. In case of an issue in deployment, <strong>we can always redirect to older or newer version</strong> in agile way. Most of the steps are carried out through scripts or portals GUI for config changes to act quickly
+
+8) Next important benefit is "<strong>resilience</strong>". A typical monolithic application would be deployed in big fat server whereas these microservices would spread across servers or even between different data center also. If one such service goes down, then the request would get served from other available copy to continue the business as usual. It also allow us to <strong>"scale out" efficiently</strong> with duplicate copies of those critical core services by deploying across servers/VMs/containers. There are open source tools which comes handy to perform these scaling operation. In monolithic design, we can maximum scale up to support the additional load but cannot live in separation- tightly coupled in same basket.
+
+9) List of companies known for using Microservice as an early adaptor are Amazon, Netflix, Twitter, Bluemix, Souldcloud, Google, Azure. In recent times, many many big websites and application has <strong>already moved from monolithic to Microservices architecture</strong> to reap it benefits. Recently, this area is hotter than Big Data or IoT trend and also players like Google Kubernetes, Mesos/Marathon, Docker Swarm, Amazon ECS, CoreOS Fleet or Rancher, Azure Container Service, Service Fabric etc are there to fill in one or the other form. The Main objective of the Service Fabric is to reduce the complexities in building complex applications using Microservice approach. Definitely Containers and actor based programming model are the examples but as said earlier, this area is going to have more update this year.
+
+10) Microservices are usually designed to function as stateless because stateful is tricky &amp; difficult to design for storing its state maintained. But <a title="https://azure.microsoft.com/en-us/services/service-fabric/" href="https://azure.microsoft.com/en-us/services/service-fabric/" target="_blank">Service Fabric</a> allows us to build such stateless/stateful service without much effort. <strong>Service Fabric is a PaaS system for building highly scalable, distributed applications composed from microservices</strong>. It enables an &gt; application runtime, &gt; patching and innovative rolling upgrade &gt; health-model support &gt; all while maintaining local state replication. I will try to cover the rest in next part in detail with hands on. Here is the bunch of links to think through.
+
+<em>Microservices:</em>
+<ol>
+	<li>Why a microservices approach to building applications? <a href="https://azure.microsoft.com/en-us/documentation/articles/service-fabric-overview-microservices/">https://azure.microsoft.com/en-us/documentation/articles/service-fabric-overview-microservices/</a></li>
+	<li>Virtual Academy: Exploring Microservice Architecture : <a href="https://azure.microsoft.com/en-us/blog/virtual-academy-exploring-microservice-architecture/">https://azure.microsoft.com/en-us/blog/virtual-academy-exploring-microservice-architecture/</a></li>
+	<li>Provision and deploy microservices predictably in Azure : <a href="https://azure.microsoft.com/en-us/documentation/articles/app-service-deploy-complex-application-predictably/">https://azure.microsoft.com/en-us/documentation/articles/app-service-deploy-complex-application-predictably/</a></li>
+	<li><a href="http://www.microservicesweekly.com/">http://www.microservicesweekly.com/</a> -<em> * highly recommended *</em></li>
+</ol>
+<em>General resources:</em>
+<ol>
+	<li>Microservices : <a href="http://martinfowler.com/articles/microservices.html">http://martinfowler.com/articles/microservices.html</a></li>
+	<li>Microservices Are Not a free lunch! : <a href="http://contino.co.uk/microservices-not-a-free-lunch/">http://contino.co.uk/microservices-not-a-free-lunch/</a></li>
+	<li>Services, Microservices, Nanoservices – oh my! : <a href="http://arnon.me/2014/03/services-microservices-nanoservices/">http://arnon.me/2014/03/services-microservices-nanoservices/</a></li>
+	<li>Micro Service Architecture : <a href="https://yobriefca.se/blog/2013/04/29/micro-service-architecture/">https://yobriefca.se/blog/2013/04/29/micro-service-architecture/</a></li>
+	<li>Microservice Design Patterns : <a href="https://www.voxxed.com/blog/2015/04/microservice-design-patterns/">https://www.voxxed.com/blog/2015/04/microservice-design-patterns/</a></li>
+	<li>Microservices: Decomposing Applications for Deployability and Scalability : <a href="http://www.infoq.com/articles/microservices-intro">http://www.infoq.com/articles/microservices-intro</a></li>
+</ol>
+<em>Service Fabric –specific:</em>
+<ol>
+	<li>Microsoft Azure Service Fabric Architecture : <a href="https://channel9.msdn.com/Events/Ignite/2015/BRK3717">https://channel9.msdn.com/Events/Ignite/2015/BRK3717</a></li>
+	<li>Building Resilient, Scalable Services with Microsoft Azure Service Fabric : <a href="https://channel9.msdn.com/Events/Ignite/2015/BRK3730">https://channel9.msdn.com/Events/Ignite/2015/BRK3730</a></li>
+	<li>Deploying and Managing Services with Microsoft Azure Service Fabric : <a href="https://channel9.msdn.com/Events/Ignite/2015/BRK3478">https://channel9.msdn.com/Events/Ignite/2015/BRK3478</a></li>
+	<li>Service Orchestration with Microsoft Azure Service Fabric : <a href="https://channel9.msdn.com/Events/Ignite/2015/BRK3485">https://channel9.msdn.com/Events/Ignite/2015/BRK3485</a></li>
+	<li>Microsoft Azure Service Fabric Actors: The Director's Cut : <a href="https://channel9.msdn.com/Events/Ignite/2015/BRK3476">https://channel9.msdn.com/Events/Ignite/2015/BRK3476</a></li>
+	<li>Microservices: An application revolution powered by the cloud:- <a href="https://azure.microsoft.com/en-us/blog/microservices-an-application-revolution-powered-by-the-cloud/">https://azure.microsoft.com/en-us/blog/microservices-an-application-revolution-powered-by-the-cloud/</a></li>
+	<li>Guide to converting Web and Worker Roles to Service Fabric stateless services - <a href="https://azure.microsoft.com/en-us/documentation/articles/service-fabric-cloud-services-migration-worker-role-stateless-service">https://azure.microsoft.com/en-us/documentation/articles/service-fabric-cloud-services-migration-worker-role-stateless-service</a>
+Learn about the differences between Cloud Services and Service Fabric before migrating applications. -<a href="https://azure.microsoft.com/en-us/documentation/articles/service-fabric-cloud-services-migration-differences/">https://azure.microsoft.com/en-us/documentation/articles/service-fabric-cloud-services-migration-differences/</a></li>
+</ol>
+btw,  As I am writing this, I do see Service Fabric going live or GA (general availability). Worth to check //BUILD2016 events and news about ths same topic for latest happenings <a href="https://channel9.msdn.com/Events/Build/2016" target="_blank">https://channel9.msdn.com/Events/Build/2016</a>
+
+<em>happy learning !</em></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

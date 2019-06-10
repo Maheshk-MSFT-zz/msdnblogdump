@@ -1,0 +1,163 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[LFCS] Managing Software RAID</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    6/11/2018 11:07:00 PM</time>
+<hr>
+<div id='content'><span style="font-size: small"><u><em>mdadm</em></u> is a super cool command in Linux used to manage MD devices <em>aka</em> Linux Software RAID. Before we jump in, let’s see what is RAID. - --Redunant array of independent disks
+--if disk gets corrupted, then data loss
+--using RAID, if one disk fails, other will take over</span>
+
+<span style="font-size: small">$ man page says this,</span>
+<blockquote><em><span style="font-size: small">RAID devices are virtual devices created from two or more real block devices. This allows multiple devices (typically disk drives or partitions thereof) to be combined into a single device to hold (for example) a single filesystem. Some RAID levels include redundancy and so can survive some degree of device failure.</span></em></blockquote>
+<span style="font-size: small"><strong>Understanding RAID soln, </strong>
+RAID O- Striping { one big device based on multiple disk, no redundancy or easy recovery}
+RAID 1- Mirroring { 2 disks, identical }
+RAID 5- striping with distributed parity { if data is written with parity info, if one disks fails, then restore the data }
+RAID 6- striping with dual distributed parity { redundant parity is written,advancement of RAID 5 }
+RAID 10- mirrored and striped { minimum of 10 disks, 2 for striping, 2 for mirrored}</span>
+
+<span style="font-size: small"><strong><span style="color: #ff0000">Sample question:</span> </strong>How to create a RAID 5 Device using 3 disk device of 1 GB each. Also allocate additional device as spare device.
+-- Put a file system on it and mount it on /raid
+-- Fail one of the devices, monitor what is happening
+-- Replace the failed device with spare device</span>
+
+<span style="font-size: small;color: #ff0000"><strong>Solution:</strong></span>
+<blockquote><span style="font-size: small">$ <strong>cat</strong> <strong>/proc/partitions </strong>
+$ <strong>fdisk -l</strong> { list the partition tables for the device, if no device specified then list all the partitions from the system }
+$ <strong>fdisk</strong> <strong>/dev/sdc</strong>
+</span><span style="font-size: small"><em> -n create a new partitions { size as +1G }
+-m {help}
+-t :L {enter "fd" for Linux raid auto}
+-w { write the </em>entries to persist }
+$ <strong>partprobe</strong> { inform the OS partition table changes }
+$ <strong>vim /etc/fstab </strong>{ before we proceed, let’s verify the disks are not used for any mounting. In my case, I had used as swap device mounting so got an error saying device is busy error. Rmv the entry, reboot }
+$ <strong>mdadm</strong> <strong>--create /dev/md1 -l <span style="color: #ff0000">5</span> -x 1 --raid-disk=<span style="color: #ff0000">3</span> /dev/sdc1 /dev/sdc2 /dev/sdc3 /dev/sdc4 --verbose --auto=yes</strong>
+$ <strong>mdadm</strong> <strong>--detail /dev/md1</strong> { list details after creation, should see 3 device + 1 spare device }</span>
+
+<span style="font-size: small"> $ <strong>mdadm </strong>--<strong>fail</strong> <strong>dev/md1 /dev/sdc1 </strong>{ to simulate the failure }
+$ <strong>mdadm --remove /dev/md1 /dev/sdc1</strong> { remove the faulty one }
+$ <strong>mdadm --add /dev/md1 /dev/sdc1 </strong>{ add the device back to the pool as spare device if healthy }</span></blockquote>
+<span style="font-size: small"><em>other disk related commands,</em>
+$ blkid $ blkid /dev/sdc
+$ df -h, df -h -T, df -hT /home
+$ du -h /home, du -sh /home/mydir
+$ mount /dev/sdc5 /mnt, cd /mnt , touch file1 { after mounting make entry in /etc/fstab to persist}
+$ mount -a { to mount all fs mentioned in fstab}
+$ mkfs.ext4 /dev/sda4 { format a partition of type ext4, after creating a partition }</span>
+
+<span style="color: #ff0000;font-size: small"><strong>Command output:</strong></span>
+
+<span style="font-size: xx-small"><span style="color: #0000ff">root@mikky100:~# mdadm --fail /dev/md1 /dev/sdc1 { Simulate the failure }</span>
+mdadm: set /dev/sdc1 faulty in /dev/md1</span>
+
+<span style="color: #0000ff;font-size: xx-small"><a href="mailto:root@mikky100"><span>root@mikky100</span></a></span><span style="font-size: xx-small"><span style="color: #0000ff">:~# mdadm --detail /dev/md1 { view the detail after the failure, we should see the spare disk getting rebuild }</span>
+/dev/md1:
+Version : 1.2
+Creation Time : Mon Jun 11 06:10:34 2018
+Raid Level : raid5
+Array Size : 1951744 (1906.32 MiB 1998.59 MB)
+Used Dev Size : 975872 (953.16 MiB 999.29 MB)
+Raid Devices : 3
+Total Devices : 4
+Persistence : Superblock is persistent</span>
+
+<span style="font-size: xx-small"> Update Time : Mon Jun 11 17:06:09 2018
+State : clean, degraded, recovering
+Active Devices : 2
+Working Devices : 3
+Failed Devices : 1
+Spare Devices : 1</span>
+
+<span style="font-size: xx-small"> Layout : left-symmetric
+Chunk Size : 512K</span>
+
+<span style="font-size: xx-small"> Rebuild Status : 3% complete</span>
+
+<span style="font-size: xx-small"> Name : mikky100:1 (local to host mikky100)
+UUID : 772f743c:b1209727:6910411d:690d6294
+Events : 20</span>
+
+<span style="font-size: xx-small"> Number Major Minor RaidDevice State
+3 8 36 0 <strong>spare rebuilding /dev/sdc4</strong>
+1 8 34 1 active sync /dev/sdc2
+4 8 35 2 active sync /dev/sdc3</span>
+
+<span style="font-size: xx-small"> 0 8 33 - <span>faulty</span> /dev/sdc1</span>
+
+<span style="font-size: xx-small"><span style="color: #0000ff">root@mikky100:~# mdadm --detail /dev/md1</span>
+/dev/md1:
+Version : 1.2
+Creation Time : Mon Jun 11 06:10:34 2018
+Raid Level : raid5
+Array Size : 1951744 (1906.32 MiB 1998.59 MB)
+Used Dev Size : 975872 (953.16 MiB 999.29 MB)
+Raid Devices : 3
+Total Devices : 4
+Persistence : Superblock is persistent</span>
+
+<span style="font-size: xx-small"> Update Time : Mon Jun 11 17:08:13 2018
+State : clean
+Active Devices : 3
+Working Devices : 3
+Failed Devices : 1
+Spare Devices : 0</span>
+
+<span style="font-size: xx-small"> Layout : left-symmetric
+Chunk Size : 512K</span>
+
+<span style="font-size: xx-small"> Name : mikky100:1 (local to host mikky100)
+UUID : 772f743c:b1209727:6910411d:690d6294
+Events : 37</span>
+
+<span style="font-size: xx-small"> Number Major Minor RaidDevice State
+3 8 36 0 <strong>active sync /dev/sdc4</strong>
+1 8 34 1 active sync /dev/sdc2
+4 8 35 2 active sync /dev/sdc3</span>
+
+<span style="font-size: xx-small"> 0 8 33 - faulty /dev/sdc1
+</span>
+
+<span style="font-size: xx-small;color: #0000ff">root@mikky100:~# mdadm --add /dev/md1 /dev/sdc1 { add the disk back as spare }</span>
+
+<span style="color: #0000ff;font-size: xx-small"><a href="mailto:root@mikky100"><span>root@mikky100</span></a></span><span style="font-size: xx-small"><span style="color: #0000ff">:~# mdadm --detail /dev/md1</span>
+/dev/md1:
+Version : 1.2
+Creation Time : Mon Jun 11 06:10:34 2018
+Raid Level : raid5
+Array Size : 1951744 (1906.32 MiB 1998.59 MB)
+Used Dev Size : 975872 (953.16 MiB 999.29 MB)
+Raid Devices : 3
+Total Devices : 4
+Persistence : Superblock is persistent</span>
+
+<span style="font-size: xx-small"> Update Time : Mon Jun 11 17:12:21 2018
+State : clean
+Active Devices : 3
+Working Devices : 4
+Failed Devices : 0
+Spare Devices : 1</span>
+
+<span style="font-size: xx-small"> Layout : left-symmetric
+Chunk Size : 512K</span>
+
+<span style="font-size: xx-small"> Name : mikky100:1 (local to host mikky100)
+UUID : 772f743c:b1209727:6910411d:690d6294
+Events : 39</span>
+
+<span style="font-size: xx-small"> Number Major Minor RaidDevice State
+3 8 36 0 active sync /dev/sdc4
+1 8 34 1 active sync /dev/sdc2
+4 8 35 2 active sync /dev/sdc3</span>
+
+<span style="font-size: small"><span style="font-size: xx-small"> 5 8 33 - <strong>spare /dev/sdc1</strong></span>
+</span></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

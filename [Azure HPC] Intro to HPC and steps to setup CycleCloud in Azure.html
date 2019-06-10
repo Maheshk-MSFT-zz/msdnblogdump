@@ -1,0 +1,155 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[Azure HPC] Intro to HPC and steps to setup CycleCloud in Azure</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    3/31/2018 4:13:00 PM</time>
+<hr>
+<div id='content'><span style="color: #ff0000">&lt;update:9/2/2018&gt;</span>
+<pre><span style="color: #808080"><em><strong>Aug 31,</strong> Our CycleCloud team hits <span style="text-decoration: underline">general availability in Azure</span>. It's a tool for creating, managing, operating, and optimizing HPC clusters of any scale in Azure.Azure CycleCloud is available in the Microsoft Download Center, Azure Marketplace, and Azure Container Registry,</em></span>
+<span style="color: #808080"><em>• <a href="https://azure.microsoft.com/en-us/blog/microsoft-azure-the-cloud-for-high-performance-computing/">Azure CycleCloud announcement</a></em></span>
+<span style="color: #808080"><em>• <a href="https://azure.microsoft.com/en-us/features/azure-cyclecloud">Azure CycleCloud product page</a></em></span>
+<span style="color: #808080"><em>• <a href="https://docs.microsoft.com/en-us/azure/cyclecloud/">Documentation</a></em></span>
+<span style="color: #808080"><em>• <a href="https://www.microsoft.com/en-us/download/details.aspx?id=57182">Azure CycleCloud download</a></em></span>
+<span style="color: #808080"><em>• <a href="https://azuremarketplace.microsoft.com/en-us/marketplace/apps/azurecyclecloud.azure-cyclecloud-vm?tab=Overview">Azure Marketplace offering for Azure CycleCloud</a></em></span>
+<span style="color: #808080"><em>• <a href="https://hub.docker.com/r/microsoft/azure-cyclecloud/">Azure Container Registry container</a></em></span>
+
+<span style="color: #808080"><em><strong>The following key scenarios are met by CycleCloud:</strong></em></span>
+<span style="color: #808080"><em>• Ability to run Linux &amp; Windows HPC Clusters with traditional schedulers, including Slurm, PBS Pro, HPC Pack, Spectrum LSF and Symphony, Grid Engine, or HTCondor.</em></span>
+<span style="color: #808080"><em>• Easily managing HPC clusters with multiple VM families and sizes to get capacity for critical runs</em></span>
+<span style="color: #808080"><em>• Customizable workload templates that serve as best-practice starting points for Azure deployments</em></span>
+<span style="color: #808080"><em>• Active directory integration for access to and management of compute environments</em></span></pre>
+<span style="color: #ff0000">&lt;/update&gt;</span>
+
+<span>As part of <strong><a href="https://www.youracclaim.com/badges/a7170005-e6c3-4a1e-9e1e-f556e6521562/">Microsoft Internal MOOC</a></strong> course “<b>Big Compute: Uncovering and Landing Hyperscale Solutions in Azure”</b>, I was introduced to CycleCloud and learned how to setup CycleCloud in my Azure subscription. I would like to blog about some of my HPC learning + steps followed to setup one.
+</span>
+
+<span style="color: #0000ff;font-size: small"><strong>What is HPC? </strong></span><span style="font-size: small">High Performance computing(HPC) is a parallel processing technique for solving complex computational problems. HPC applications can scale to thousands of compute cores. We can run these workloads in our premise by setting up clusters, extend the burst volume to cloud or run as a 100% cloud native solution. </span>
+
+<a href="media/2018/03/image417.png"><span style="font-size: small"><img title="image" alt="image" src="media/2018/03/image_thumb388.png" width="618" height="382" border="0" /></span></a>
+
+<span style="color: #0000ff;font-size: small"><strong>Where is Big Compute used, usecase ? </strong></span><span style="font-size: small">Usually compute intensive operations are best suited for this workload. </span>
+
+<a href="media/2018/03/image418.png"><span style="font-size: small"><img title="image" alt="image" src="media/2018/03/image4_thumb1.png" width="616" height="361" border="0" /></span></a>
+
+<span style="color: #0000ff;font-size: small"><strong>How HPC can be achieved in Microsoft Azure?</strong></span>
+
+<strong><span style="font-size: small">1) </span></strong><a target="_blank" href="https://azure.microsoft.com/en-us/services/batch/" rel="noopener"><strong><span style="font-size: small">Azure Batch</span></strong></a><span style="font-size: small"> –&gt;managed service, “<strong>cluster” as a service</strong>, running jobs, developers can write application that submit jobs using SDK, cloud native, HPC as a service, Pay as you go billing</span>
+
+<strong><span style="font-size: small">2) </span></strong><a target="_blank" href="https://cyclecomputing.com/products-solutions/cyclecloud/" rel="noopener"><strong><span style="font-size: small">CycleCloud</span></strong></a><span style="font-size: small"><strong> </strong>–&gt;<a target="_blank" href="https://blogs.microsoft.com/blog/2017/08/15/microsoft-acquires-cycle-computing-accelerate-big-computing-cloud/" rel="noopener">acquired</a> by MS, “<strong>cluster” management software</strong> aka orchestration software, supports hybrid clusters, multi cloud, managing and running clusters, one time license, you have complete control of the cluster and nodes
+</span>
+
+<strong><span style="font-size: small">3) </span></strong><a target="_blank" href="https://azure.microsoft.com/en-us/blog/cray-in-azure-for-weather-forecasting/" rel="noopener"><strong><span style="font-size: small">CrayComputer</span></strong></a><span style="font-size: small"> –&gt;partnership with CrayComputer, famous weather forecasting service</span>
+
+<strong><span style="font-size: small">4) </span><a target="_blank" href="https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-setup-hybrid-hpcpack-cluster" rel="noopener"><span style="font-size: small">HPC pack</span></a></strong><strong></strong><span style="font-size: small"><strong> </strong>in Azure Infra–&gt;<strong> </strong></span><a target="_blank" href="https://docs.microsoft.com/en-us/azure/virtual-machines/windows/high-performance-computing#marketplace-solutions" rel="noopener"><span style="color: #000000;font-size: small">Marketplace offerings</span></a><span style="font-size: small">  {HPC Applications, HPC VM images, HPC storages}</span>
+
+<span style="font-size: small">Azure Batch doesn’t need intro as it is there for quite sometime, setting up a Batch is very easy. Tools like Batch Labs helps us to monitor/control the Batch job effortlessly. Batch SDK helps us to integrate with existing legacy application easily to submit the job or manage the entire batch operation using their custom developed application. The end uses need not to login to Azure portal for submitting the jobs. </span>
+
+[embed] https://twitter.com/MahesKBlr/status/948924709885771776 [/embed]
+
+[embed] https://twitter.com/MahesKBlr/status/779008726908833792 [/embed]
+
+<span style="font-size: small;color: #0000ff"><strong>What is CycleCloud? </strong></span><span style="font-size: small">CycleCloud provides a simple, secure, and scalable way to manage compute and storage resources for HPC and Big Compute/Data workloads in Cloud. CycleCloud enables users to create environments in Azure. It supports distributed jobs and also parallel workloads to tightly-coupled applications such as MPI jobs on Infiniband/RDMA. By managing resource provisioning, configuration, and monitoring, CycleCloud allows users and IT staff to focus on business needs instead infrastructure. </span>
+
+<a href="media/2018/03/image1101.png"><span style="font-size: small"><img title="image" alt="image" src="media/2018/03/image1_thumb1.png" width="678" height="448" border="0" /></span></a>
+
+<a href="media/2018/03/image419.png"><span style="font-size: small"><img title="image" alt="image" src="media/2018/03/image_thumb389.png" width="676" height="408" border="0" /></span></a>
+
+<strong><span style="font-size: small"><span style="color: #0000ff">How to set it up in Azure? </span></span></strong><span style="font-size: small">Steps are already documented </span><a target="_blank" href="https://github.com/azurebigcompute/BigComputeLabs/tree/master/CycleCloud" rel="noopener"><span style="font-size: small">here</span></a><span style="font-size: small">, I am trying to put the same steps in screenshot for easy reference. </span>
+
+<span style="font-size: small">1) Download the </span><a target="_blank" href="https://github.com/azurebigcompute/BigComputeLabs/tree/master/CycleCloud" rel="noopener"><span style="font-size: small">json files</span></a><span style="font-size: small"> to your local drive. Say, c:\temp </span>
+
+<span style="font-size: small">2) Generate the </span><a target="_blank" href="https://blogs.msdn.microsoft.com/maheshk/2018/01/31/aad-how-to-create-service-principal-through-cli/" rel="noopener"><span style="font-size: small">Service Principle</span></a><span style="font-size: small"> </span>
+
+<span style="font-size: small">3) Generate </span><a target="_blank" href="https://blogs.msdn.microsoft.com/maheshk/2018/01/30/linux-ssh-how-to-login-azure-linux-vms-using-ssh-key-pair/" rel="noopener"><span style="font-size: small">SSH pub and private key</span></a>
+
+<span style="font-size: small">4) Clone the repo file to your local drive, say c:\temp</span>
+
+<code><span style="font-size: small">git clone </span><a href="https://github.com/azurebigcompute/Labs.git"><span style="font-size: small">https://github.com/azurebigcompute/Labs.git</span></a><span style="font-size: small"> </span></code>
+
+<span style="font-size: small">5) Edit the <em><u>vms-params.json</u></em> file to specify the generated rsaPublicKey parameter from Step3. The cycleDownloadUri and cycleLicenseSas parameters have been pre-configured, but if you procure license then you need to update these two params as well. For now, I am leaving as it.. </span>
+
+<a><span style="font-size: small"></span></a>
+
+<span style="font-size: small"><a href="media/2018/03/image420.png"><img title="image" alt="image" src="media/2018/03/image_thumb390.png" width="855" height="335" border="0" /></a></span>
+
+<span style="font-size: small">6) Now login to Azure CLI, create resource group, storage account, create VNET deployment and at last create VMs</span>
+
+<code><span style="font-size: small">C:\temp&gt;</span></code><code><span style="font-size: small">az login</span></code>
+
+<code><span style="font-size: small">C:\temp&gt;az group create --name "cycle-rg" --location "southeastasia"</span></code>
+
+<code><span style="font-size: small">C:\temp&gt; az storage account create --name "mikkyccStorage" --group "cycle-rg" --location "southeastasia" --sku "Standard_LRS"</span></code>
+
+<code><code><span style="font-size: small">C:\temp&gt;az group deployment create --name "vnet_deployment" --resource-group "cycle-rg" --template-uri </span><a href="https://raw.githubusercontent.com/azurebigcompute/Labs/master/CycleCloud/deploy-vnet.json"><span style="font-size: small">https://raw.githubusercontent.com/azurebigcompute/Labs/master/CycleCloud/deploy-vnet.json</span></a><span style="font-size: small"> --parameters vnet-params.json</span></code></code>
+
+<code><code><span style="font-size: small">C:\temp&gt;az group deployment create --name "vms_deployment" --resource-group "cycle-rg" --template-uri </span><a href="https://raw.githubusercontent.com/azurebigcompute/Labs/master/CycleCloud/deploy-vms.json"><span style="font-size: small">https://raw.githubusercontent.com/azurebigcompute/Labs/master/CycleCloud/deploy-vms.json</span></a><span style="font-size: small"> --parameters vms-params.json</span></code>
+</code>
+
+<code><code><a href="media/2018/03/cyc3.png"><span style="font-size: small"></span></a><span style="font-size: small"><a href="media/2018/03/cyc31.png"><img title="cyc3" alt="cyc3" src="media/2018/03/cyc3_thumb.png" width="855" height="440" border="0" /></a></span></code>
+</code>
+
+<span style="font-size: small">
+7) Post the deployment, you will find the above set of resources created in our resource group say “cycle-rg”. Select the Cycleserver VM and copy the IP address to see if you can browse CycleCloud setup page. </span>
+
+<a href="media/2018/03/image421.png"><img title="image" alt="image" src="media/2018/03/image_thumb391.png" width="855" height="406" border="0" /></a>
+
+<span style="font-size: small">8) Pls note, the installation uses a self-signed SSL certificate, which may show up with a warning in your browser. So, it is safe to ignore the warning and add it as exception to get the page like the after setting up the cluster (refer configure “CycleCloud Server” section from this <a target="_blank" href="https://github.com/azurebigcompute/BigComputeLabs/tree/master/CycleCloud" rel="noopener">page</a>). If you get the below page after all the setup, then we are ready to create new cluster and submit the jobs. </span>
+
+<span style="font-size: small"><a href="media/2018/03/image422.png"><img title="image" alt="image" src="media/2018/03/image_thumb392.png" width="785" height="447" border="0" /></a></span>
+
+<span style="font-size: small">9) Refer the section as it is “Creating a Grid Engine Cluster” 5.1 as it is from <a target="_blank" href="https://github.com/azurebigcompute/BigComputeLabs/tree/master/CycleCloud" rel="noopener">here</a></span>
+
+<span style="font-size: small">10) After the cluster is created, we need to start the cluster and see it is running like the below. </span>
+
+<a href="media/2018/03/image423.png"><img title="image" alt="image" src="media/2018/03/image_thumb393.png" width="783" height="380" border="0" /></a>
+
+<span style="font-size: small">11) Now our Grid Engine cluster is ready for the job submission, For security reasons, the CycleCloud VM (CycleServer) is behind a jump box/bastion host. To access CycleServer, we must first log onto the jump box, and then ssh onto the CS instance. To do this, we'll add a second host to jump through to the ssh commands. </span>
+
+<span style="font-size: small">From Azure portal, retrieve the admin box DNS and construct the SSH command as in screenshot. The idea is to “ssh –J” to our CycleServer through CycleAdmin box. One cannot directly ssh into CycleServer which is for security. </span>
+<pre><code><span style="font-size: small">$ ssh -J cycleadmin@{JUMPBOX PUBLIC HOSTNAME} cycleadmin@cycleserver -i {SSH PRIVATE KEY}</span></code></pre>
+<span style="font-size: small"><a href="media/2018/03/cyc.png"><img title="cyc" alt="cyc" src="media/2018/03/cyc_thumb.png" width="855" height="492" border="0" /></a></span>
+
+<span style="font-size: small">12) Once we get into <a href="mailto:CycleAdmin@CycleServer">CycleAdmin@CycleServer</a>, first change into root user and call CycleCloud Initialize command. You need to enter the username and password for that machine. </span>
+
+<a href="media/2018/03/image424.png"><img title="image" alt="image" src="media/2018/03/image_thumb394.png" width="855" height="430" border="0" /></a>
+
+<span style="font-size: small">13) Connecting to the Grid Engine Master as </span>
+<pre><code><span style="font-size: small">[root@cycleserver ~]$ cyclecloud connect master –c &lt;clustername&gt;</span></code></pre>
+<a href="media/2018/03/image425.png"><img title="image" alt="image" src="media/2018/03/image_thumb395.png" width="855" height="224" border="0" /></a>
+
+<span style="font-size: small">14) Now ready to submit our first job, <span style="font-size: small"><a target="_blank" href="http://gridscheduler.sourceforge.net/htmlman/htmlman1/qstat.html" rel="noopener"><strong>qstat</strong></a><strong> </strong>is to query the status of grid engine jobs and queues &amp; <span style="font-size: small"><a target="_blank" href="http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html" rel="noopener"><strong>qsub</strong></a><strong> </strong>is to submit the batch jobs<strong>. </strong></span></span></span>
+
+<a href="media/2018/03/image426.png"><img title="image" alt="image" src="media/2018/03/image_thumb396.png" width="854" height="163" border="0" /></a>
+
+<span style="font-size: small">15) On successful submission, we should see the job started executing in our nodes. </span>
+
+<a href="media/2018/03/read16.png"><img title="read16" alt="read16" src="media/2018/03/read16_thumb.png" width="855" height="402" border="0" /></a>
+
+<span style="font-size: small">Master takes the batch job and getting executed from 3 nodes spin under execute node template</span>
+
+<a href="media/2018/03/image427.png"><img title="image" alt="image" src="media/2018/03/image_thumb397.png" width="855" height="611" border="0" /></a>
+
+<a href="media/2018/03/image428.png"><img title="image" alt="image" src="media/2018/03/image_thumb398.png" width="855" height="277" border="0" /></a>
+
+<span style="font-size: small">By the way, if we login the Azure portal and navigate to the RG, then we would see there is VMSS created as part of execute worker nodes. </span>
+
+<a href="media/2018/03/image429.png"><img title="image" alt="image" src="media/2018/03/image_thumb399.png" width="855" height="142" border="0" /></a>
+
+<span style="font-size: small"><a href="media/2018/03/image430.png"><img title="image" alt="image" src="media/2018/03/image_thumb400.png" width="855" height="405" border="0" /></a></span>
+
+<span style="font-size: small">we could also set the autoscaling feature from CycleCloud cluster settings, so the Azure VM’s comes and goes away once the job is completed. We have submitted 100 jobs per our command so it will request 100 cores. Based on the cluster core limit, it will decide whether to scale till that or not. Let say, if we have set 100 cores as cluster scale limit, then we would see many other VM’s also getting created to complete the task in parallel. </span>
+
+<span style="font-size: small"><code><span style="font-size: small">[cyclecloud@ip-0A000404 ~]$ qsub -t 1:100 -V -b y -cwd hostname</span></code></span>
+
+<span style="font-size: small">Once the job is completed, we can terminate the cluster and also delete the RG if you don’t want to retain which is our last step. I know it’s a bit of learning + confusing to start for the first time, but once you hands-on then it is easy to setup whenever you require and dispose off after completing our jobs. </span>
+
+<span style="font-size: small">Happy learning !</span></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

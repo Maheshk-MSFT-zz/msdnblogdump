@@ -1,0 +1,30 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[LFCS] terminal multiplexer commands $ tmux</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    5/28/2018 3:17:00 PM</time>
+<hr>
+<div id='content'>tmux, htop and bash-completion are the 3 useful commands for the exam. You can install them using $ apt install tmux htop bash-completion.Let's see the commands for tmux,
+
+Session management:-
+$ apt install tmux -y
+$ tmux new -s &lt;session-name&gt;
+$ tmux attach -t &lt;session-name&gt; {continue to run in the bg if we detach}
+$ tmux list-sessions
+
+Session command:-
+&lt;Cntl-b&gt; % -&gt; Split the window vertically
+&lt;Cntl-b&gt; " -&gt; Split the window horizontally
+&lt;Cntl-b&gt; x -&gt; kill the current pane
+&lt;Cntl-b&gt; Up, Down, Right, Left cursor -&gt; switch the cursor from one pane to the other
+&lt;Cntl-b&gt; x -&gt; Close the current pane
+&lt;Cntl-b&gt; [ -&gt; Scroll within a pane (use q to exit)</div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

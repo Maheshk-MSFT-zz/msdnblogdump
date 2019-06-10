@@ -1,0 +1,129 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>How to get the connection string for Redis Cache using Azure Redis Mgmt Library</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    7/13/2016 3:07:10 AM</time>
+<hr>
+<div id='content'>Recently I had this query from an Azure developer asking sample ARM template for creating Redis cache and then get the connection string from the created cache so to pass it to our next resource creation say Azure WebApps . End to end in single ARM template.  I have explored few samples in Github but could not find any end-to end sample to get this done. The one important part is not very clear for me, how to make REST API call within ARM template to get the accesskey for the newly created cache. And the last part about how to play around with strings to create the qualified ConnectionString from the fragmented REST response. I felt quite challenging to get this all done using ARM template without any sample to refer. More importantly I did not find any documentation around ARM capabilities. But I am sure there must be some way to do this by invoking PS or external scripts etc.
+
+<strong>Problem statement: </strong>1) Create or update the Redis Cache 2) Get the list of cache and its Access Key 3) Use the details and create the fully qualified ConnectionString
+
+<strong>Possible options: </strong>Portal/Powershell/CLI/SDK’s. I chose to go .NET way using <strong>Azure Redis Management Library 1.2.1(preview)</strong>-<a title="https://www.nuget.org/packages/Microsoft.Azure.Management.Redis/1.2.1-preview" href="https://www.nuget.org/packages/Microsoft.Azure.Management.Redis/1.2.1-preview">https://www.nuget.org/packages/Microsoft.Azure.Management.Redis/1.2.1-preview</a>.
+
+Here is the code address the problem,
+<pre id="code" class="brush:Csharp">﻿
+using System;
+using Microsoft.Azure;
+using StackExchange.Redis;
+using Microsoft.Azure.Management.Redis;
+using Microsoft.Azure.Management.Redis.Models;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+
+//Using ADAL library 2.28 to avoid Async complexities
+//Using StackExchange Redis dll to resolve "ConfigurationOptions" Dependency
+
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string resourcegroupName = "";
+            string cacheName = "";
+            string subscriptionId = "";
+            string location = "";
+            string token = string.Empty;
+            string tenantId = "";
+
+            //get the bearer token from AAD by passing your tenantID
+            token =GetAuthorizationHeader(tenantId);
+
+            TokenCloudCredentials creds = new TokenCloudCredentials(subscriptionId, token);
+            RedisManagementClient redisclient = new RedisManagementClient(creds);
+
+            Console.WriteLine("Do you want to create or update the Redis Cache [y/n]?");
+            ConsoleKeyInfo consoleKeyInfo=Console.ReadKey();
+
+            if (consoleKeyInfo.Key.ToString().ToLower() == "y")
+            {
+                var redisProperties = new RedisProperties();
+                redisProperties.Sku = new Sku("Basic", "C", 1);
+                var redisParams = new RedisCreateOrUpdateParameters(redisProperties, location);
+                //Create or update the existing cache
+                redisclient.Redis.CreateOrUpdate(resourcegroupName, cacheName, redisParams);
+            }
+
+            //List all the caches under the given resourcegroupname
+            RedisListResponse listresponse = redisclient.Redis.List(resourcegroupName);
+
+            string connectionString = string.Empty;
+            string existingcachename = string.Empty;
+            string existingcachehostname = string.Empty;
+            string existingcachepkey = string.Empty;
+
+            foreach (RedisResource redisresource in listresponse.Value)
+            {
+                Console.WriteLine("DISPLAY EXISTING CACHE..................\n");
+                existingcachehostname = redisresource.Properties.HostName;
+                Console.WriteLine("Redis cachename:"+ existingcachehostname);
+                existingcachename = redisresource.Name;
+                Console.WriteLine("Redis hostname:" + existingcachename);
+                Console.WriteLine("Redis redisversion:" + redisresource.Properties.RedisVersion);
+                Console.WriteLine("Redis ProvisioningState" + redisresource.Properties.ProvisioningState);
+
+                //RedisGetResponse response = redisclient.Redis.Get(resourcegroupName, existingcachename);
+                Console.WriteLine("PRINTING KEYS..................\n");
+                RedisListKeysResponse redislistkeysresponse = redisclient.Redis.ListKeys(resourcegroupName, existingcachename);
+                Console.WriteLine("PrimaryKey:" + redislistkeysresponse.PrimaryKey);
+                Console.WriteLine("SecondaryKey:" + redislistkeysresponse.SecondaryKey);
+                Console.WriteLine("RequestId:" + redislistkeysresponse.RequestId);
+                Console.WriteLine("StatusCode:" + redislistkeysresponse.StatusCode);
+
+            }
+            //for regenerating the Primary and Secondary Key
+            // redisclient.Redis.RegenerateKey(resourcegroupName, existingcachename, new RedisRegenerateKeyParameters(RedisKeyType.Primary));
+
+            //to delete the cache. This would take some time to cleanup. 
+            //redisclient.Redis.Delete(resourcegroupName, existingcachename);
+
+            //referenced StackExchange.Redis here for only using the ConfigurationOptions
+            var configoptions = new ConfigurationOptions();
+            configoptions.EndPoints.Add(existingcachehostname);
+            configoptions.Password = existingcachepkey;
+            configoptions.ConnectTimeout = 10000;
+            configoptions.SyncTimeout = 70000;
+            configoptions.AbortOnConnectFail = false;
+            configoptions.ToString();
+            Console.WriteLine("REDIS ConnectionString &gt;"+ configoptions);
+
+            Console.ReadKey();
+        }
+
+        private static string GetAuthorizationHeader(string tenantId)
+        {
+            var authenticationContext = new AuthenticationContext("https://login.microsoftonline.com/"+ tenantId);
+            //For clientId, using Powershell wellknown clientId- 1950a258-227b-4e31-a9cf-717495945fc2
+            AuthenticationResult resultstr = authenticationContext.AcquireToken("https://management.core.windows.net/",
+                            "1950a258-227b-4e31-a9cf-717495945fc2",
+                            new Uri("urn:ietf:wg:oauth:2.0:oob"),
+                            PromptBehavior.Always);
+            Console.WriteLine("Login Successfull..! Access token is ready to use. ");
+            return resultstr.AccessToken;
+        }
+    }
+}
+
+</pre>
+Let me know if you find this useful and have details around equivalent ARM for this..
+
+Disclaimer:- The above sample code is provided for the purpose of illustration only and is not intended to be used in a production environment.</div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

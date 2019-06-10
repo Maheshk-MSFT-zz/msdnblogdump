@@ -1,0 +1,33 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[AAD] How to create Service Principal through CLI</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    1/31/2018 3:20:00 PM</time>
+<hr>
+<div id='content'><span style="font-size: small">There are multiple ways to generate the Service Principal for Azure AD. Say, through portal, CLI or PowerShell. </span><span style="font-size: small">I always used Azure portal for this registration. But started liking CLI way of generating principal which is very simple and easy to register and generate the required keys and move on. Yes, many times you would find this step as a prerequisites or in mid way to continue say Azure Data Lake Analytics query or ADAL programming. </span>
+<pre><code><span style="font-size: small">$ az login</span></code></pre>
+<pre><code><span style="font-size: small">$ az account list -o table</span></code></pre>
+<code><span style="font-size: small">$ az ad sp create-for-rbac --name MikkyDemoTraining --years 1</span></code>
+
+<code><span style="font-size: small"><strong>output:</strong>
+        {
+                "appId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "displayName": "MikkyDemoTraining",
+                "name": "http://MikkyDemoTraining",
+                "password": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                "tenant": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+        }</span></code>
+
+<span style="font-size: small">
+Ps: Take note of the password value for later references, otherwise you may need to regenerate again. </span>
+
+For more detail - <a href="https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest">https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?view=azure-cli-latest</a></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

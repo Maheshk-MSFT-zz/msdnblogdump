@@ -1,0 +1,59 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>How to collect Azure Cloud Service(VM) Logs using Powershell</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    2/18/2016 1:02:00 PM</time>
+<hr>
+<div id='content'><strong>Issue: </strong>
+
+How to collect the "Azure Cloud Services instances(VM) logs" when we are unable to RDP or connection failed for some reason. Infact, we can try when RDP not configured etc. Just in case, If we see RDP working, then we can use this tool in VM directly after logging in- <a href="http://dsazure.blob.core.windows.net/azuretools/AzureTools.exe">http://dsazure.blob.core.windows.net/azuretools/AzureTools.exe</a>
+
+The below solution is useful when we are unable Remote desktop(RDP) into Azure Cloud Service VM machines.
+
+<strong>Solution: </strong>
+
+I am trying to simplify <a href="https://azure.microsoft.com/en-us/blog/simplifying-virtual-machine-troubleshooting-using-azure-log-collector/">this</a> blog post and also <em>adding</em> those missing script location for quicker reference.
+
+Step 1: Download this <a href="https://onedrive.live.com/redir?resid=410E76C6390C7090!43403&amp;authkey=!AI6pNluNeXOBiKE&amp;ithint=file%2czip" target="_blank">&lt;click here&gt;</a> scripts to your c:\temp. [ AzureRemotelogcollector.ps1, SetAzureServiceLogCollector.ps1 ]
+
+Step 2: Extract the files to the location say C:temp and update the required details in this file -AzureRemotelogcollector.ps1 { make sure to enter cloud services name, role and more importantly working storage account :) }
+
+Step 3: Launch the Powershell in admin mode ( how to launch any exe in admin mode easily refer <a href="http://blogs.msdn.com/b/maheshk/archive/2015/11/09/visual-studio-tips-1-how-to-launch-vs-always-in-quot-administrator-quot-mode.aspx">here </a>)
+
+Step 4: Run this cmdlet to access your subscription PS C:\windows\system32&gt; <strong>Add-AzureAccount </strong>
+
+Step 5: Navigate to our script file location path and then type the filename for execution PS C:\temp&gt; <strong>.\AzureRemotelogcollector.ps1</strong>
+
+&nbsp;
+
+<a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/6811.psexecution.png"><img class="" src="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/6811.psexecution.png" alt="" width="735" height="522" border="0" /></a>
+
+&nbsp;
+
+Step 6: Now its ready for download. You can use this free tool <a href="http://storageexplorer.com/">http://storageexplorer.com/ </a>to download these log files
+
+<a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/2063.blog1.PNG"><img class="" src="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/2063.blog1.PNG" alt="" width="861" height="667" border="0" /></a>
+
+Let me know if you run into any issues..
+
+<span style="font-family: verdana, geneva;font-size: x-small">Related links:-</span>
+
+<span style="font-family: verdana, geneva;font-size: x-small"><a href="https://www.opsgility.com/blog/windows-azure-powershell-reference-guide/getting-started-with-windows-azure-powershell/">Configure your Azure Subscription with the Azure PowerShell Cmdlets.</a> </span>
+
+<span style="font-family: verdana, geneva;font-size: x-small">Regarding troubleshooting tools- refer Kwill's blog - <a href="http://blogs.msdn.com/b/kwill/archive/2013/08/26/azuretools-the-diagnostic-utility-used-by-the-windows-azure-developer-support-team.aspx">here</a> </span>
+
+<em><span style="font-size: x-small">P.s: I do not author these scripts. Thanks to this site for hosting this script <a href="http://www.learningsharepoint.com/wp-content/uploads/downloads/2015/12/SetAzureServiceLogCollector.txt">site</a>. </span></em>
+
+<span style="color: red;font-size: small">
+&lt;Updated 4/8/2016: Added screenshot explaining the input params&gt; </span>
+
+<a href="media/2016/02/error.png"><img class="alignleft  wp-image-134" src="media/2016/02/error-300x204.png" alt="error" width="190" height="129" /></a></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

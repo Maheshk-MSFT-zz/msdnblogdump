@@ -1,0 +1,117 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>10 cool things about .NET Core &amp; ASP.NET 5</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    12/4/2015 9:14:00 AM</time>
+<hr>
+<div id='content'>Yes, you are reading right – Now .NET is truly cross-platform, open-source technology and as many said, it's <strong>no more grandpa's .NET</strong>
+
+Let us start with CLR, CORE and other dependencies one by one. As of now, there are 3 flavors of CLR available – 1) .NET Framework CLR 2) Mono CLR 3) .NET CoreCLR (cloud optimized/pay as you go).
+
+.NET Core consists of set of libraries called “<em><strong>corefx</strong>”</em> and small runtime called “<em><strong>coreclr</strong>”. </em>
+
+Then "<strong>What actually is .NET Core</strong>?"
+
+<a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/6138.net.png"><img class="" src="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/6138.net.png" alt="" width="858" height="437" border="0" /></a>
+
+It is nothing but <span style="background-color: #ffff00">modular, cross platform and open source implementation of .NET Framework</span> means our application can be targetted to run on windows, Linux, Mac OS X and docker.
+
+Let us further break it down; what is what -
+
+<strong><a title="http://dotnet.github.io/" href="http://dotnet.github.io/">corefx</a></strong> –&gt; repo contains .NET Core foundational lib’s alias CoreFx. Let say classes for collections, console or XML for that matter
+
+<strong><a href="http://dotnet.github.io/">coreclr</a></strong> –&gt; repo contains the actual .NET Core runtime alias CoreCLR – base library called <em>mscorlib</em>. It also contains GC, JIT compiler and some of the base .NET data types and low level classes like system.tostring, type etc
+
+<strong><a href="https://github.com/aspnet/dnx">dnx</a></strong> –&gt; .NET execution runtime, having the code to bootstrap and run our application. It includes compiling system, SDK tools and the native CLR Hosts
+
+<strong><a href="https://github.com/aspnet/dnvm">dnvm</a></strong> -&gt; enables you to acquire one or multiple .NET Execution Environments (DNX). DNVM is simply a script, which doesn’t depend on .NET. You can install it via a PowerShell command from a command prompt window
+
+<strong><a href="https://github.com/aspnet/Home/wiki/DNX-utility">dnu</a></strong> -&gt; tool is responsible for all operations involved with packages in your application { dnu restore / dnu install / dnu publish / dnu pack / dnu build / dnu list }
+
+<strong><a href="https://msdn.microsoft.com/en-us/vstudio/dotnetnative.aspx">.NET native</a></strong> –&gt; compiles IL byte code to native machine code (no-JIT'ing), so that when the code is executed, there is only “native” code running. It produces binary directly to the OS to execute –no JIT-ing business or runtime compilation. .NET Native is the set of tools used to build .NET Universal Windows platform (UWP) apps.  <em>a.k.a AOT, Ahead of Time compiler. </em>
+
+.NET Framework and .NET native is currently supported only on Windows OS. One thing to note here, .NET Native doesn't require .NET Framework runtime dependencies any more. In particular, if you set the .NET native to true then you do not require run time installed. However it uses the optimized implementation of .NET Core.<em>
+</em>
+
+<a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/3731.net2.png"><img class="" src="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/3731.net2.png" alt="" width="805" height="434" border="0" /></a>
+
+1) .NET Core runtime includes the same GC which is available in .NET Framework however it doesn't have things like App Domain, registry or CAS etc. Best thing above all is; <em>isolation</em>– you are going to pack and ship only the run-time dependencies needed for the execution. Means no other external dependencies or shared components required on the targeted machine. We can deploy locally (side by side). It is also sub-set of .NET Framework. We no need to get the latest .NET for system wide installs. We pull the references which is required only for “our” project – that’s it. More importantly, as I said earlier this eliminates GAC installation or registry or COM dependencies or DLL from a installation path – it’s all gone now. <strong>It’s pretty much work within the capsule which gets deployed through Nuget.</strong>
+
+2) .NET Core story means Mono? <strong>"No", Mono is an open source implementation of .NET Framework</strong>. It is alive and well with a large ecosystem on top. It independent of .NET Core.
+
+3) .NET Core is mostly aimed for <strong>server applications</strong>- say ASP.NET vNEXT. <a href="https://docs.asp.net/en/latest/conceptual-overview/aspnet.html">ASP.NET 5/vNEXT (RC1)</a> – fully open source  expected in <a href="https://github.com/aspnet/Home/wiki/Roadmap">Q1* 2016</a>, optimized for modern cloud based applications. You can develop and run them across the platforms. It is great fix for Devops and Cloud Computing. With the level of modular separation, it is going to be the trend in development for Containers based micro services or distributed components maintained and updated separately.
+
+4) ASP.NET 5 is based on a new <strong>flexible run-time host</strong>. It provides a flexibility to run your application with any of the 3 different run-times - .NET framework, .NET Core and Mono. We can host our ASP.NET 5 on IIS, or any Open Web Interface .NET (OWIN)-based server or our own process or self host.
+
+<a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/3108.net3.png"><img class="" src="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/3108.net3.png" alt="" width="847" height="502" border="0" /></a>
+
+5) <strong>No web.config/app.config settings, global.aspx for asp.net 5</strong>, more importantly there is no system.web as like traditional asp.net application. Your web config file is replaced with “Project.json” is our project metadata file which holds all the dependencies and framework to build and run etc.
+
+&gt; Start.cs is main file for our application – It has got a Startup constructor and Configuration-services which adds services to the container
+
+&gt; References – all dependencies of our projects are neatly packaged as nuget pkgs.
+
+<a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/metablogapi/0143.aa_498535EC.gif"><img style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" title="" src="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/metablogapi/8510.aa_thumb_41FC5730.gif" alt="aa" width="515" height="526" border="0" /></a>
+
+6) ASP.NET 5 uses <strong>built-in Dependency Injection</strong> for configuring Services and Libraries. Admin can patch an application without requiring the application to recompile. More over application is also not locked into a patched version - newer versions which is patched can still be used. DI in ASP.NET 5 is end to end applied through .NET Stack.
+
+7)<strong> NuGet as a first class delivery vehicle</strong>- Yes, packaging is done using NuGet; – pack what we wanted and distributed as independent package.
+
+8) In case of ASP.NET 5, there is <strong>no compilation</strong> happens means build step is removed. We can make the changes and refresh the browser for new changes to reflect. The compilation happens automatically after save. It also fully supports side by side support, can be installed without affecting any other applications on the machine.
+
+9) .NET Framework is a machine wide framework. Any changes affects all the application taking the dependency on it where as <strong>.NET Core is XCOPY deployable stack</strong>. We do not have to get any out of the box run-time installed other than what application bundled with. It minimize the size of the application as well.
+<pre><span style="font-family: 'courier new', courier">Step1) Execute the following command in command prompt under Admin</span>
+<span style="font-family: 'courier new', courier">@powershell -NoProfile -ExecutionPolicy unrestricted -Command "&amp;{$Branch='dev';iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/aspnet/Home/dev/dnvminstall.ps1'))}" </span>
+<span style="font-family: 'courier new', courier">Step2) Dnvm upgrade or Dnvm update-self</span>
+<span style="font-family: 'courier new', courier">Step3) dnvm install -r coreclr latest -u</span>
+<span style="font-family: 'courier new', courier">Step4) dnvm list </span>
+<span style="font-family: 'courier new', courier">Step5) Create the below code in C:\temp\Hello.cs</span>
+<span style="font-family: 'courier new', courier"> using System;</span>
+<span style="font-family: 'courier new', courier"> public class Program</span>
+<span style="font-family: 'courier new', courier"> {</span>
+<span style="font-family: 'courier new', courier"> public static void Main (string[] args)</span>
+<span style="font-family: 'courier new', courier"> {</span>
+<span style="font-family: 'courier new', courier"> Console.WriteLine("Hello, Windows");</span>
+<span style="font-family: 'courier new', courier"> Console.WriteLine("This is from Windows :) and running over .NET Core");</span>
+<span style="font-family: 'courier new', courier"> }</span>
+<span style="font-family: 'courier new', courier"> }</span>
+<span style="font-family: 'courier new', courier">Step6) Create a project.json under the same folder where our CS file resides</span>
+<span style="font-family: 'courier new', courier">{</span>
+<span style="font-family: 'courier new', courier"> "version": "1.0.0-*",</span>
+<span style="font-family: 'courier new', courier"> "dependencies": {</span>
+<span style="font-family: 'courier new', courier"> },</span>
+<span style="font-family: 'courier new', courier"> "frameworks" : {</span>
+<span style="font-family: 'courier new', courier"> "dnx451" : { },</span>
+<span style="font-family: 'courier new', courier"> "dnxcore50" : {</span>
+<span style="font-family: 'courier new', courier"> "dependencies": {</span>
+<span style="font-family: 'courier new', courier"> "System.Console": "4.0.0-beta-*"</span>
+<span style="font-family: 'courier new', courier"> }</span>
+<span style="font-family: 'courier new', courier"> }</span>
+<span style="font-family: 'courier new', courier"> }</span>
+<span style="font-family: 'courier new', courier">}</span>
+<span style="font-family: 'courier new', courier">Step7) dnu restore</span>
+<span style="font-family: 'courier new', courier">Step8) dnx run</span></pre>
+10) As of now, we can build few workloads like <strong>1) Console Application 2) ASP.NET 5 and its services 3) Windows 10 UWP</strong>. But things are getting added. Read the future .NET Core road map <a title="https://github.com/dotnet/core/blob/master/roadmap.md" href="https://github.com/dotnet/core/blob/master/roadmap.md">here</a>
+
+<a href="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/1780.demo.gif"><img class="" src="media/MSDNBlogsFS/prod.evol.blogs.msdn.com/CommunityServer.Blogs.Components.WeblogFiles/00/00/01/71/65/1780.demo.gif" alt="Click the gif" width="1001" height="311" border="1" /></a>
+
+<span style="font-size: x-small"><em><span style="text-decoration: underline">Disclaimer</span>: This is my understanding about this topic read from various official content. Please feel free to correct me if you happen to see mistakes in this post.</em></span>
+
+&nbsp;
+
+<span style="background-color: #ffff00"><strong><em>&lt;Update: 20/1/2016&gt;</em></strong></span>
+
+ASP.NET 5 is now renamed as ASP.NET Core 1.0
+
+<a title="http://www.hanselman.com/blog/ASPNET5IsDeadIntroducingASPNETCore10AndNETCore10.aspx" href="http://www.hanselman.com/blog/ASPNET5IsDeadIntroducingASPNETCore10AndNETCore10.aspx" target="_blank">http://www.hanselman.com/blog/ASPNET5IsDeadIntroducingASPNETCore10AndNETCore10.aspx </a>
+
+<strong><span style="background-color: #ffff00"><em>&lt;/Update&gt;</em></span></strong></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

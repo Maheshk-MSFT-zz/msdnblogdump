@@ -1,0 +1,114 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>How to specify VNet details when creating New-AzureBatchPool compute nodes</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    11/25/2016 10:18:00 PM</time>
+<hr>
+<div id='content'>Recently I had an ask from a developer to check Azure Powershell Command let&gt; <a href="https://msdn.microsoft.com/en-us/library/mt125936.aspx">New-AzureBatchPool</a> script execution issue. He wanted to specify the VNet details as a parameter to this command so that the batch pool nodes would created with this detail. Unfortunately, we did not have any sample to refer or validate parameter. We spent quite amount of time tweaking the parameter to see the effect but no luck. Lately found a <a href="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf">link </a>where these details are explained enough to try on our own.
+
+Please note, failing to follow these condition would throw errors<strong>.</strong> Suggest to start this <a href="https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#pool-network-configuration" title="https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#pool-network-configuration">https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#pool-network-configuration</a> and also this <a href="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf" title="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf">https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf</a>. Each and every condition in the below list matters.
+<ul>
+ 	<li>The specified <a href="https://azure.microsoft.com/documentation/articles/virtual-networks-overview/">Virtual Network (VNet)</a> must be in the same Azure region as the Azure Batch account.</li>
+ 	<li>The specified VNet must be in the same subscription as the Azure Batch account.</li>
+ 	<li>The specified VNet must be a Classic VNet. VNets created via Azure Resource Manager are not supported.</li>
+ 	<li>The specified subnet should have enough free IP addresses to accommodate the "targetDedicated" property. If the subnet doesn't have enough free IP addresses, the pool will partially allocate compute nodes, and a resize error will occur.</li>
+ 	<li>The "MicrosoftAzureBatch" service principal must have the <a href="https://azure.microsoft.com/en-us/documentation/articles/role-based-access-built-in-roles/#classic-virtual-machine-contributor">"Classic Virtual Machine Contributor" Role-Based Access Control (RBAC) role</a> for the specified VNet. If the specified RBAC role is not given, the Batch service returns 400 (Bad Request).</li>
+ 	<li>The specified subnet must allow communication from the Azure Batch service to be able to schedule tasks on the compute nodes. This can be verified by checking if the specified VNet has any associated Network Security Groups (NSG). If communication to the compute nodes in the specified subnet is denied by an NSG, then the Batch service will set the state of the compute nodes to unusable.</li>
+ 	<li>This property can be specified only for pools created with <a href="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_csconf">cloudServiceConfiguration</a>. If this is specified on pools created with the <a href="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_vmconf">virtualMachineConfiguration</a> property, the Batch service returns 400 (Bad Request).</li>
+</ul>
+<strong>Working Powershell command let for easy reference:- </strong>
+
+<span style="color: #0000ff;font-family: 'Courier New'"><span style="font-size: small"><strong>Add-AzureRmAccount</strong>
+<strong>Select-AzureRmSubscription</strong> -<span style="color: #000000">SubscriptionName</span> <span style="color: #c0504d">"xxxxx Azure xxx xxxx - xxxx"</span></span></span>
+
+<span style="color: #0000ff;font-family: 'Courier New'"><span style="font-size: small"><span style="color: #ff0000">$batchcontext</span> = <strong>Get-AzureRmBatchAccountKeys</strong> -<span style="color: #000000">AccountName</span> <span style="color: #9b00d3">nicoloasbatch</span></span></span>
+
+<span style="color: #0000ff;font-family: 'Courier New'"><span style="font-size: small"><span style="color: #ff0000">$objectvnetconf</span> = <strong>New-Object</strong> -<span style="color: #000000">TypeName</span> <span style="color: #9b00d3">Microsoft.Azure.Commands.Batch.Models.PSNetworkConfiguration</span></span></span>
+
+<span style="color: #0000ff;font-family: 'Courier New'"><span style="font-size: small"><span style="color: #ff0000">$objectvnetconf.SubnetId</span> = <span style="color: #c0504d">"/subscriptions/xxxxxxxxxxxxxxxxxx/resourceGroups/nicoloasbatch/providers/Microsoft.ClassicNetwork/virtualNetworks/nicolasclassicvnet/subnets/mysubnet1"</span></span></span>
+
+<span style="color: #0000ff;font-family: 'Courier New'"><span style="font-size: small"><span style="color: #ff0000">$configuration</span> = <strong>New-Object</strong> -<span style="color: #000000">TypeName</span> <span style="color: #c0504d">"Microsoft.Azure.Commands.Batch.Models.PSCloudServiceConfiguration"</span> -<span style="color: #000000">ArgumentList</span> @(4,"*")</span></span>
+
+<span style="color: #ff0000;font-family: 'Courier New'"><span style="font-size: small"><span style="color: #0000ff"><strong>New-AzureBatchPool</strong> -Id "MikkybatchPool" -<span style="color: #000000">VirtualMachineSize</span> "Small" -<span style="color: #000000">TargetDedicated</span> 1 -<span style="color: #000000">BatchContext</span> <span style="color: #ff0000">$batchcontext</span> -<span style="color: #000000">NetworkConfiguration</span> <span style="color: #ff0000">$objectvnetconf</span> -<span style="color: #000000">CloudServiceConfiguration</span> </span><span style="color: #ff0000">$configuration</span>
+</span></span>
+
+<strong></strong>
+
+<strong>How to specify RBAC details, explained in screenshots. </strong>
+
+&gt; The "MicrosoftAzureBatch" service principal must have the <a href="https://azure.microsoft.com/en-us/documentation/articles/role-based-access-built-in-roles/#classic-virtual-machine-contributor">"Classic Virtual Machine Contributor" Role-Based Access Control (RBAC) role</a> for the specified VNet. If the specified RBAC role is not given, the Batch service returns 400 (Bad Request).
+
+<strong>Step1:- </strong>
+
+<a href="media/2016/11/image654.png"><img title="image" style="float: left;padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2016/11/image_thumb543.png" width="971" align="left" height="540" /></a>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong></strong>
+
+<strong>Step 2:- </strong>
+
+<a href="media/2016/11/image655.png"><img title="image" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2016/11/image_thumb544.png" width="970" height="408" /></a>
+
+<strong>Step 3:-</strong>
+
+<a href="media/2016/11/image656.png"><img title="image" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2016/11/image_thumb545.png" width="706" height="475" /></a>
+
+<strong>How to verify whether it is successfully executed or not. </strong>
+
+<a href="media/2016/11/226.png"><img title="2" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="2" src="media/2016/11/2_thumb1.png" width="1150" height="429" /></a>
+
+<strong>On successful execution…</strong>
+
+<a href="media/2016/11/image657.png"><img title="image" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="image" src="media/2016/11/image_thumb546.png" width="1046" height="465" /></a>
+
+<strong>Reference:-</strong>
+
+Pool network configuration- <a href="https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#pool-network-configuration" title="https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#pool-network-configuration">https://docs.microsoft.com/en-us/azure/batch/batch-api-basics#pool-network-configuration</a>
+
+Add a pool to an account(networkConfiguration) <a href="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf" title="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf">https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf</a><a href="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf" title="https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf">https://msdn.microsoft.com/library/azure/dn820174.aspx#bk_netconf</a>
+
+Thanks to <strong>Marie-Magdelaine Nicolas</strong> for sharing the powershell command let.</div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

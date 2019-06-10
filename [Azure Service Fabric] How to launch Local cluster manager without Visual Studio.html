@@ -1,0 +1,16 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>[Azure Service Fabric] How to launch Local cluster manager without Visual Studio</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    6/14/2017 8:36:00 PM</time>
+<hr>
+<div id='content'><p>Recently I had this problem where my local cluster manager got disappeared from system tray without clue. I tried loading Visual studio and ran SF project to bring it back which is time consuming for a simple demo. </p><p>Problem:- Is there a way to launch only the cluster manager without visual studio? </p><p>Answer:- Yes, we can do that by simply running <strong>“ServiceFabricLocalClusterManager.exe”</strong> exe from run prompt.&nbsp; </p><p><br></p><p><a href="media/2017/06/image382.png"><img width="321" height="161" title="image" alt="image" src="media/2017/06/image_thumb364.png" border="0"></a></p><p><br></p><p><a href="media/2017/06/image383.png"><img width="322" height="192" title="image" alt="image" src="media/2017/06/image_thumb365.png" border="0"></a></p><p>To get this exe, we need to install the SDK <a href="http://aka.ms/ServiceFabricSDK">http://aka.ms/ServiceFabricSDK</a> and navigate to this path “C:\Program Files\Microsoft SDKs\Service Fabric\Tools\ServiceFabricLocalClusterManager.exe”. Btw, ServiceFabricLocalClusterManager.exe is required to manage our local dev cluster. </p></div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>

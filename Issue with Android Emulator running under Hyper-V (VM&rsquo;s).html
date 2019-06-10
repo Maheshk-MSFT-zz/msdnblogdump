@@ -1,0 +1,26 @@
+<html><head>
+<meta charset='UTF-8'>
+<link href='resource/bootstrap.min.css' rel='Stylesheet' type='text/css' />
+<link href='resource/style.css' rel='Stylesheet' type='text/css' />
+</head>
+<body>
+<div id='page'>
+<h1 class='entry-title'>Issue with Android Emulator running under Hyper-V (VM&rsquo;s)</h1>
+ <a class='url fn n profile-usercard-hover' href='https://social.msdn.microsoft.com/profile/Maheshk [MSFT]' target='_blank'>Maheshk [MSFT]</a>
+<time>    8/3/2016 3:25:00 AM</time>
+<hr>
+<div id='content'>Recently I prepared a VM in our lab for checking an issue repro. The issue was with Android Studio running(Java code) hitting Azure Storage blobs throwing an exception for some weird reason. So quickly jumped in creating a Lab machine and installed all the software like Android Studio, ton of updates and 90+ packages having various emulators. It took quite sometime to install everything(tiring), fix the Java path(this is pain and behaves differently between editors) etc.
+
+After setting up all, I ran the code for the first time happily but got this error which brought everything to halt. After bit of research, learned that <b>we cannot run phone emulators within a Hyper-Vised (VM‘s), looks like emulator runs under another Hyper-V </b>which means running Hyper-V in another Hyper-V not supported. <b> </b>
+
+<a href="media/2016/08/emulator.png"><img title="emulator" style="padding-top: 0px;padding-left: 0px;padding-right: 0px;border: 0px" border="0" alt="emulator" src="media/2016/08/emulator_thumb.png" width="739" height="555" /></a>
+
+<strong>Solution</strong>:- We may have to use our own laptop/physical machine connecting to phone directly with USB cable <img class="wlEmoticon wlEmoticon-sadsmile" style="border-style: none" alt="Sad smile" src="media/2016/08/wlEmoticon-sadsmile.png" />. This gives good experience rather emulator way. this is also faster when it comes to debugging or disconnect or redeploy or tracing end to end.
+
+Let me know if there is a way to mitigate this along with your dev setup experience. Any tips and tricks also welcome..
+
+Happy learning !</div>
+</div></body>
+<script type='text/javascript' src='resource/jquery-1.12.1.min.js'></script>
+<script type='text/javascript' src='resource/replace.js'></script>
+</html>
